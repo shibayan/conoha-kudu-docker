@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  proxy:
+    build: ./proxy
+    restart: always
+    ports:
+      - "80:80"
+
+  aspnetcore:
+    build: ./aspnetcore
+    restart: always
+    depends_on:
+      - "proxy"
+    volumes:
+      - "/var/www/home:/home"
+
+  kudu:
+    build: ./kudu
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - "/var/www/home:/home"
+    environment:
+      - WEBSITE_SITE_NAME=conoha
+      - KUDU_RUN_USER=conoha
